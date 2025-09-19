@@ -45,9 +45,13 @@ export async function GET(req: NextRequest) {
     if (persisted) lastNowPlaying = persisted;
   }
   send(JSON.stringify({ nowPlaying: lastNowPlaying }));
-  // heartbeat to keep connections alive
-  const interval = setInterval(() => {
-    try { send(JSON.stringify({ heartbeat: Date.now() })); } catch { /* ignore */ }
+  // heartbeat + periodic snapshot refresh from KV to span edge instances
+  const interval = setInterval(async () => {
+    try {
+      const persisted = await getNowPlaying();
+      if (persisted) lastNowPlaying = persisted;
+      send(JSON.stringify({ nowPlaying: lastNowPlaying, heartbeat: Date.now() }));
+    } catch { /* ignore */ }
   }, 25000);
 
   const headers = new Headers({
