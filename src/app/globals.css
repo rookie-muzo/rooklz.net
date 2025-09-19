@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0e0f13;
+  --foreground: #e7ebf0;
+  /* Retro palette */
+  --xp-blue: #2b78da;
+  --xp-blue-dark: #1e5aa7;
+  --vista-glass: #63b3ff;
+  --habbo-yellow: #ffcc00;
+  --ng-orange: #ff6a00;
+  --panel: #10131a;
+  --panel-border: #1c2230;
+  --panel-highlight: #2a3245;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0c10;
+    --foreground: #e7ebf0;
+  }
+}
+
+body {
+  background: radial-gradient(1200px 600px at 10% -10%, #1a2040 0%, transparent 60%),
+    radial-gradient(1000px 500px at 110% -10%, #102234 0%, transparent 60%),
+    linear-gradient(180deg, #0d0f14 0%, #0b0c10 100%);
+  color: var(--foreground);
+  font-family: Tahoma, Verdana, Geneva, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+/* Retro window styles */
+.window {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 18%)
+      , var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 8px 24px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+}
+
+.titlebar {
+  background: linear-gradient(180deg, var(--xp-blue) 0%, var(--xp-blue-dark) 100%);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.35);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+}
+
+.taskbar {
+  background: linear-gradient(180deg, #1a2740 0%, #0f1830 100%);
+  border-bottom: 1px solid #000000;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 2px 0 0 rgba(255,255,255,0.05) inset, 0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* Accent variants */
+.variant-vista .titlebar { background: linear-gradient(180deg, #8fd3ff 0%, #2b78da 100%); }
+.variant-ng .titlebar { background: linear-gradient(180deg, #ff8a00 0%, #ff6a00 100%); }
+.variant-habbo .titlebar { background: linear-gradient(180deg, #ffd000 0%, #ff9800 100%); }
+
+/* Link styles reminiscent of early 2010s */
+a {
+  color: #9fd1ff;
+}
+a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
