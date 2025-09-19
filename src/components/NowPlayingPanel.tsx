@@ -51,7 +51,7 @@ export default function NowPlayingPanel() {
     };
     hydrateFromJson();
     // Prefer SSE from direct WACUP updates with auto-reconnect
-    let pollId: number | null = null;
+    let pollId: ReturnType<typeof setInterval> | null = null;
     const startPoll = () => { pollId = setInterval(hydrateFromJson, 30000); };
     const connectSSE = () => {
       const sse = new EventSource("/api/now-playing");
