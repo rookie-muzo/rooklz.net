@@ -51,7 +51,7 @@ export default function NowPlayingPanel() {
     };
     hydrateFromJson();
     // Prefer SSE from direct WACUP updates with auto-reconnect
-    let pollId: any = null;
+    let pollId: number | null = null;
     const startPoll = () => { pollId = setInterval(hydrateFromJson, 30000); };
     const connectSSE = () => {
       const sse = new EventSource("/api/now-playing");
@@ -61,7 +61,7 @@ export default function NowPlayingPanel() {
           if (!("nowPlaying" in payload)) return;
           const np = payload.nowPlaying;
           if (np) {
-            setCurrent(np.title ? { name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } : null);
+            setCurrent(np.title ? { name: np.title || "", artist: np.artist || "", url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } : null);
             setIsPlaying(!!np.isPlaying);
             startedAtRef.current = np.startedAtMs || null;
             durationRef.current = np.durationMs || null;

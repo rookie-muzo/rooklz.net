@@ -57,7 +57,7 @@ export default function NowPlayingTicker() {
           if (!("nowPlaying" in payload)) return; // ignore heartbeats
           const np = payload.nowPlaying;
           if (np) {
-            setCurrent({ name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } as any);
+            setCurrent({ name: np.title || "", artist: np.artist || "", url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined });
             startedAtRef.current = np.startedAtMs || null;
             durationRef.current = np.durationMs || null;
           } else {
