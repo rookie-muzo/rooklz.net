@@ -24,7 +24,7 @@ async function kvCommand<T = unknown>(command: string[]): Promise<T | null> {
   });
   if (!res.ok) return null;
   const json = (await res.json()) as { result?: T };
-  return (json as any).result ?? null;
+  return (json && "result" in json ? (json.result as T) : null);
 }
 
 let memoryValue: Persisted = null;

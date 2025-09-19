@@ -22,7 +22,10 @@ export async function GET(req: NextRequest) {
   const accept = req.headers.get("accept") || "";
   const wantsJson = url.searchParams.get("format") === "json" || accept.includes("application/json");
   if (wantsJson) {
-    if (!lastNowPlaying) lastNowPlaying = (await getNowPlaying()) as any;
+    if (!lastNowPlaying) {
+      const persisted = await getNowPlaying();
+      if (persisted) lastNowPlaying = persisted;
+    }
     return NextResponse.json({ nowPlaying: lastNowPlaying });
   }
 
@@ -37,7 +40,10 @@ export async function GET(req: NextRequest) {
   // advise client reconnect delay
   try { writer.write(encoder.encode(`retry: 3000\n\n`)); } catch {}
   // initial snapshot
-  if (!lastNowPlaying) lastNowPlaying = (await getNowPlaying()) as any;
+  if (!lastNowPlaying) {
+    const persisted = await getNowPlaying();
+    if (persisted) lastNowPlaying = persisted;
+  }
   send(JSON.stringify({ nowPlaying: lastNowPlaying }));
   // heartbeat to keep connections alive
   const interval = setInterval(() => {
