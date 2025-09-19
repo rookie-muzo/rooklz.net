@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
   if (!startedAtMs && incoming.isPlaying) startedAtMs = nowMs;
-  const prev = lastNowPlaying || (null as any);
+  const prev = lastNowPlaying || null;
   const entry = {
     title: incoming.title || prev?.title || "",
     artist: incoming.artist || prev?.artist || "",

@@ -23,8 +23,8 @@ export default function NowPlayingTicker() {
     const hydrateFromJson = async () => {
       try {
         const res = await fetch("/api/now-playing?format=json", { cache: "no-store" });
-        const data = await res.json();
-        const np = data.nowPlaying as any;
+        const data: { nowPlaying?: { title?: string; artist?: string; url?: string; album?: string; isPlaying?: boolean; startedAtMs?: number; durationMs?: number } } = await res.json();
+        const np = data.nowPlaying;
         if (aborted) return;
         if (np) {
           setCurrent({ name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } as any);
@@ -53,9 +53,9 @@ export default function NowPlayingTicker() {
       const sse = new EventSource("/api/now-playing", { withCredentials: false });
       sse.onmessage = (ev) => {
         try {
-          const payload = JSON.parse(ev.data);
+          const payload: { nowPlaying?: { title?: string; artist?: string; url?: string; album?: string; isPlaying?: boolean; startedAtMs?: number; durationMs?: number } } = JSON.parse(ev.data);
           if (!("nowPlaying" in payload)) return; // ignore heartbeats
-          const np = payload.nowPlaying as any;
+          const np = payload.nowPlaying;
           if (np) {
             setCurrent({ name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } as any);
             startedAtRef.current = np.startedAtMs || null;

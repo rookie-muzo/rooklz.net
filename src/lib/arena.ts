@@ -2,7 +2,7 @@ export type ArenaBlock = {
   id: number;
   title: string;
   href: string;
-  kind: "Image" | "Link" | "Text" | string;
+  kind: "Image" | "Link" | "Text" | "Block";
   thumbUrl?: string;
 };
 
@@ -35,7 +35,7 @@ export async function getRecentChannelBlocks(
   return blocks.map((b) => ({
     id: b.id,
     title: b.title || "Untitled",
-    kind: (b.class as any) || "Block",
+    kind: (b.class as "Image" | "Link" | "Text" | "Block") || "Block",
     href: `https://www.are.na/block/${b.id}`,
     thumbUrl: b.image?.thumb?.url || b.image?.display?.url,
   }));

@@ -57,9 +57,9 @@ export default function NowPlayingPanel() {
       const sse = new EventSource("/api/now-playing");
       sse.onmessage = (ev) => {
         try {
-          const payload = JSON.parse(ev.data);
+          const payload: { nowPlaying?: { title?: string; artist?: string; url?: string; album?: string; isPlaying?: boolean; startedAtMs?: number; durationMs?: number } } = JSON.parse(ev.data);
           if (!("nowPlaying" in payload)) return;
-          const np = payload.nowPlaying as any;
+          const np = payload.nowPlaying;
           if (np) {
             setCurrent(np.title ? { name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } : null);
             setIsPlaying(!!np.isPlaying);
