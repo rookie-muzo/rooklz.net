@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 import type { NowPlayingPayload } from "@/types/nowPlaying";
+import { getNowPlaying, setNowPlaying } from "@/lib/nowPlayingStore";
 
 let lastNowPlaying: (NowPlayingPayload & { updatedAtMs: number }) | null = null;
 
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest) {
   const accept = req.headers.get("accept") || "";
   const wantsJson = url.searchParams.get("format") === "json" || accept.includes("application/json");
   if (wantsJson) {
+    if (!lastNowPlaying) lastNowPlaying = (await getNowPlaying()) as any;
     return NextResponse.json({ nowPlaying: lastNowPlaying });
   }
 
@@ -35,6 +37,7 @@ export async function GET(req: NextRequest) {
   // advise client reconnect delay
   try { writer.write(encoder.encode(`retry: 3000\n\n`)); } catch {}
   // initial snapshot
+  if (!lastNowPlaying) lastNowPlaying = (await getNowPlaying()) as any;
   send(JSON.stringify({ nowPlaying: lastNowPlaying }));
   // heartbeat to keep connections alive
   const interval = setInterval(() => {
@@ -128,6 +131,7 @@ export async function POST(req: NextRequest) {
   // if stop: clear payload
   if (incoming.isPlaying === false && (!incoming.title && !incoming.artist) && !incoming.durationMs) {
     lastNowPlaying = null;
+    await setNowPlaying(null);
     broadcast(null);
     return NextResponse.json({ ok: true });
   }
@@ -145,6 +149,7 @@ export async function POST(req: NextRequest) {
     updatedAtMs: nowMs,
   } as NowPlayingPayload & { updatedAtMs: number };
   lastNowPlaying = entry;
+  await setNowPlaying(entry);
   broadcast(entry);
   return NextResponse.json({ ok: true });
 }
