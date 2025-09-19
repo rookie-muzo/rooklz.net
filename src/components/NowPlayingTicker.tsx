@@ -27,7 +27,7 @@ export default function NowPlayingTicker() {
         const np = data.nowPlaying;
         if (aborted) return;
         if (np) {
-          setCurrent({ name: np.title, artist: np.artist, url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined } as any);
+          setCurrent({ name: np.title || "", artist: np.artist || "", url: np.url || "", nowPlaying: !!np.isPlaying, album: np.album || undefined });
           startedAtRef.current = np.startedAtMs || null;
           durationRef.current = np.durationMs || null;
           if (startedAtRef.current && durationRef.current && np.isPlaying) {
